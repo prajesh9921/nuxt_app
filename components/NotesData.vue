@@ -67,7 +67,7 @@ export default {
   setup(props) {
     const notesList = ref(props.notesData.notes);
     const userInput = ref('');
-    const screenWidth = ref(window.innerWidth);
+    const screenWidth = ref(window?.innerWidth);
 
     // Handle input change
     const handleInput = (event) => {
