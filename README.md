@@ -4,11 +4,11 @@
 ## How to start project.
 - First clone the project.
 - Install all dependencies.
-```js
-npm Install
+```node
+npm install
 ```
 - Start the project.
-```js
+```node
 npm run dev
 ```
 ## About Project
