@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   try {
     if (event.node.req.method === "POST") {
       // POST request: Add a new group
-      const body = await readBody(event); // Parses the request body
+      const body = await readBody(event);
       const newGroup = new Group(body);
       if (
         !newGroup.grpName ||

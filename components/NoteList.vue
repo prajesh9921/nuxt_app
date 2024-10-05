@@ -50,9 +50,7 @@ export default {
     const fetchData = async () => {
       try {
         const response = await $fetch('/api/groups');
-        console.log(response.data);
         listData.value = response?.data;
-        console.log('List Data:', listData.value); 
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -84,5 +82,5 @@ export default {
 </script>
 
 <style scoped>
-    @import "~/assets/css/noteList.css"; /* Import your styles */
+    @import "~/assets/css/noteList.css";
 </style>

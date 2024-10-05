@@ -38,7 +38,6 @@ export default {
     }
   },
   setup(props) {
-    // Get the screen width dynamically
     const screenWidth = ref(window?.innerWidth);
 
     // Handle click event for the card
@@ -66,5 +65,5 @@ export default {
 </script>
 
 <style scoped>
-@import "~/assets/css/nameCard.css";  /* Import your styles */
+@import "~/assets/css/nameCard.css";
 </style>

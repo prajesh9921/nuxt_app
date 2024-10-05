@@ -8,7 +8,7 @@
         <input
           type="text"
           placeholder="Enter group name"
-          :class="input"
+          class="input"
           @input="handleGroupName"
         />
       </div>
@@ -19,28 +19,20 @@
           <ColorCard
             v-for="item in colors"
             :key="item.id"
-            :color="item"
+            :color="item.color"
             :selectedColor="selectedColor"
-            @selectColor="setSelectedColor"
+            :selectColor="setSelectedColor"
           />
         </div>
       </div>
 
-      <button class="closemodal" @click="handleCreateButton">
-        Create
-      </button>
+      <button class="closemodal" @click="handleCreateButton">Create</button>
     </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
-// import Color1 from '@/assets/SVG/svgs/Color1.vue';
-// import Color2 from '@/assets/SVG/svgs/Color2.vue';
-// import Color3 from '@/assets/SVG/svgs/Color3.vue';
-// import Color4 from '@/assets/SVG/svgs/Color4.vue';
-// import Color5 from '@/assets/SVG/svgs/Color5.vue';
-// import Color6 from '@/assets/SVG/svgs/Color6.vue';
+import { ref } from "vue";
 
 export default {
   props: {
@@ -58,24 +50,24 @@ export default {
     const groupName = ref("");
 
     const toggleModal = () => {
-      props.setModal(!props.modal);
+      props.setModal(false);
     };
 
     const handleGroupName = (event) => {
       groupName.value = event.target.value;
     };
 
-    // const colors = [
-    //   { id: 1, card: <></>, color: "#B38BFA" },
-    //   { id: 2, card: <></>, color: "#FF79F2" },
-    //   { id: 3, card: <></>, color: "#43E6FC" },
-    //   { id: 4, card: <></>, color: "#F19576" },
-    //   { id: 5, card: <></>, color: "#0047FF" },
-    //   { id: 6, card: <></>, color: "#6691FF" },
-    // ];
+    const colors = [
+      { id: 1, color: "#B38BFA" },
+      { id: 2, color: "#FF79F2" },
+      { id: 3, color: "#43E6FC" },
+      { id: 4, color: "#F19576" },
+      { id: 5, color: "#0047FF" },
+      { id: 6, color: "#6691FF" },
+    ];
 
-    const generateRandom4DigitID = () => {
-      return Math.floor(Math.random() * 9000) + 1000;
+    const setSelectedColor = (color) => {
+      selectedColor.value = color;
     };
 
     const getInitialLetters = () => {
@@ -89,30 +81,34 @@ export default {
             words[0][words[0].length - 1].toUpperCase(),
           ];
         } else {
-          initialLetters = words.slice(0, 2).map((word) => word[0].toUpperCase());
+          initialLetters = words
+            .slice(0, 2)
+            .map((word) => word[0].toUpperCase());
         }
         return initialLetters.join("");
       }
     };
 
-    const handleCreateButton = () => {
-      const randomID = generateRandom4DigitID();
+    const handleCreateButton = async () => {
       const initialLetters = getInitialLetters();
-      const res = localStorage.getItem("PocketNotes");
-      const data = JSON.parse(res);
-      const groupId = initialLetters + randomID;
 
       const val = {
-        id: groupId,
         initialLetters: initialLetters,
-        title: groupName.value,
-        color: selectedColor.value,
+        grpName: groupName.value,
+        selectedColor: selectedColor.value,
         notes: [],
       };
 
       if (selectedColor.value && groupName.value) {
-        const tempArray = [...data.data, val];
-        localStorage.setItem('PocketNotes', JSON.stringify({ data: tempArray }));
+        try {
+          await $fetch("/api/addgroup", {
+            method: "POST",
+            body: val,
+          });
+          window.location.reload()
+        } catch (error) {
+          console.log("Error in adding group", error);
+        }
         selectedColor.value = "";
         groupName.value = "";
         toggleModal();
@@ -125,38 +121,16 @@ export default {
     return {
       selectedColor,
       groupName,
-    //   colors,
+      colors,
       toggleModal,
       handleGroupName,
       handleCreateButton,
+      setSelectedColor,
     };
-  },
-};
-
-const ColorCard = {
-  props: {
-    color: {
-      type: Object,
-      required: true,
-    },
-    selectedColor: {
-      type: String,
-      required: true,
-    },
-  },
-  template: `
-    <div @click="selectColor" :class="selectedColor === color.color ? styles.colorCardDiv : styles.colorCardDiv1">
-      <component :is="color.card" />
-    </div>
-  `,
-  methods: {
-    selectColor() {
-      this.$emit('selectColor', this.color.color);
-    },
   },
 };
 </script>
 
 <style scoped>
-    @import "~/assets/css/modal.css";
+@import "~/assets/css/modal.css";
 </style>

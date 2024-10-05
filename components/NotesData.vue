@@ -1,20 +1,20 @@
 <template>
   <div class="rightMain" :style="displayStyle">
-    <!-- Check if there are no notes -->
-    <template v-if="!notesData || notesData.length === 0">
-      <SpalshScreen />
+
+    <template v-if="!notesData || notesData?.length === 0">
+      <SplashScreen  />
     </template>
 
     <template v-else>
       <!-- Header Section -->
       <div class="header">
         <div class="backBtn" @click="goBack">
-          <BackArrow />
+          <Icon name="mdi:arrow-left" size="30" style="color: white"/>
         </div>
-        <div :style="{ backgroundColor: notesData.color }" class="initialDiv">
+        <div :style="{ backgroundColor: notesData.selectedColor }" class="initialDiv">
           <p class="initialsText">{{ notesData.initialLetters }}</p>
         </div>
-        <p class="title">{{ notesData.title }}</p>
+        <p class="title">{{ notesData.grpName }}</p>
       </div>
 
       <!-- Notes Section -->
@@ -46,10 +46,8 @@
 
 <script>
 import { ref, watch, computed } from 'vue';
-// import SendArrow from '@/assets/SVG/sendArrow.vue';
 import NoteCard from '@/components/NoteCard.vue';
 import SpalshScreen from '@/components/SplashScreen.vue';
-// import BackArrow from '@/assets/SVG/backArrow.vue';
 
 export default {
   props: {
@@ -69,35 +67,22 @@ export default {
   setup(props) {
     const notesList = ref(props.notesData.notes);
     const userInput = ref('');
-    // const screenWidth = window.innerWidth;
+    const screenWidth = ref(window.innerWidth);
 
     // Handle input change
     const handleInput = (event) => {
       userInput.value = event.target.value;
     };
 
-    // Get current date and time
-    const getCurrentDateAndTime = () => {
-      const currentDate = new Date();
-      return currentDate.toISOString();
-    };
-
     // Handle sending the note
-    const handleSendArrowButton = () => {
-      const res = localStorage.getItem('PocketNotes');
-      const allData = JSON.parse(res);
-      const timeStamp = getCurrentDateAndTime();
-      const val = { value: userInput.value, timeStamp: timeStamp };
+    const handleSendArrowButton = async () => {
+      const val = { value: userInput.value };
 
       notesList.value.push(val);
-
-      allData.data.forEach((item) => {
-        if (item.id === props.notesData.id) {
-          item.notes = [...notesList.value, val];
-        }
-      });
-
-      localStorage.setItem('PocketNotes', JSON.stringify(allData));
+      await $fetch("/api/addnote", {
+        method: "POST",
+        body: {id: props.notesData._id, note: val}
+      })
       userInput.value = '';
     };
 
@@ -112,11 +97,11 @@ export default {
     });
 
     // Dynamic style for display based on screen size
-    // const displayStyle = computed(() => {
-    //   return screenWidth <= 480 && props.shouldBeVisible === 'left'
-    //     ? { display: 'none' }
-    //     : null;
-    // });
+    const displayStyle = computed(() => {
+      return screenWidth <= 480 && props.shouldBeVisible === 'left'
+        ? { display: 'none' }
+        : null;
+    });
 
     return {
       notesList,
@@ -124,12 +109,12 @@ export default {
       handleInput,
       handleSendArrowButton,
       goBack,
-      // displayStyle
+      displayStyle
     };
   }
 };
 </script>
 
 <style scoped>
-@import "~/assets/css/noteData.css";
+  @import "~/assets/css/noteData.css";
 </style>

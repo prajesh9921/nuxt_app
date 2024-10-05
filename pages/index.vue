@@ -1,4 +1,3 @@
-
 <template>
   <div class="main">
     <NoteList
@@ -11,20 +10,20 @@
     <!-- NotesData Component -->
     <NotesData
       :shouldBeVisible="shouldBeVisible"
-      @setShouldBeVisible="setShouldBeVisible"
+      :setShouldBeVisible="setShouldBeVisible"
       :notesData="notesData"
     />
     <!-- Modal Component -->
-    <Modal :modal="modal" @setModal="setModal" />
+    <Modal :modal="modal" :setModal="setModal" />
   </div>
 </template>
 
 <script>
 // Import necessary components
-import { ref, onMounted } from 'vue';
-import NoteList from '~/components/NoteList.vue';
-import NoteData from '~/components/NotesData.vue';
-import Modal from '~/components/Modal.vue';
+import { ref, onMounted } from "vue";
+import NoteList from "~/components/NoteList.vue";
+import NoteData from "~/components/NotesData.vue";
+import Modal from "~/components/Modal.vue";
 
 export default {
   components: {
@@ -33,15 +32,12 @@ export default {
     Modal,
   },
   setup() {
-    // Define the reactive state (similar to useState in React)
     const modal = ref(false);
     const notesData = ref([]);
-    const shouldBeVisible = ref('left');
+    const shouldBeVisible = ref("left");
 
-    onMounted(() => {
-    });
+    onMounted(() => {});
 
-    // Define methods for updating state
     const setModal = (value) => {
       modal.value = value;
     };
@@ -67,5 +63,5 @@ export default {
 </script>
 
 <style scoped>
-@import "~/assets/css/home.css";  
+@import "~/assets/css/home.css";
 </style>

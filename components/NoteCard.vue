@@ -2,7 +2,7 @@
   <div class="container">
     <p class="noteText">{{ data.value }}</p>
     <p class="dateTime">
-      {{ formattedDate }} <Dot />
+      {{ formattedDate }} -
       {{ formattedTime }}
     </p>
   </div>
@@ -10,7 +10,6 @@
 
 <script>
 import moment from 'moment';
-// import Dot from '@/assets/SVG/dot.vue';
 
 export default {
   props: {
