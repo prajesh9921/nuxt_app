@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
-  modules: ['nuxt-icons', "@nuxt/icon"],
+  modules: ['nuxt-icons', "@nuxt/icon", "@nuxt/fonts"],
   devtools: { enabled: true },
   nitro: {
     plugins: ["~/server/index.ts"]
